@@ -6,7 +6,7 @@
 define(function (require) {
 
   'use strict';
-  
+
   //module dependencies
   var Backbone = require('backbone');
   var Model = require('models/search/result');
@@ -37,7 +37,7 @@ define(function (require) {
     while (i--) {
       entry = entries[i];
       paths = entry.id.$t.split('/');
-      entry.source = paths[paths.length-1];
+      entry.source = paths[paths.length-1]; //generate a unique id
       entry.duration = getDuration(entry.media$group.yt$duration.seconds);
       entry.thumbnail = entry.media$group.media$thumbnail[0].url;
       entry.authorName = entry.author[0].name.$t;
