@@ -9,6 +9,7 @@ require.config({
 		mustache: '../bower_components/mustache/mustache',
 		text: '../bower_components/requirejs-text/text',
 		stache: '../bower_components/requirejs-mustache/stache',
+		stickit: '../bower_components/backbone.stickit/backbone.stickit',
     templates: '../templates'
 	},
 	shim: {
@@ -18,6 +19,9 @@ require.config({
 		},
 		underscore: {
 			exports: '_'
+		},
+		stickit: {
+			deps: ['backbone']
 		}
 	}
 });

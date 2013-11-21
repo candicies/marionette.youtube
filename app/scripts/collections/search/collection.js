@@ -17,8 +17,8 @@ define(function (require) {
    * @return {String}
    */
   function getDuration(seconds) {
-    minutes = parseInt(seconds / 60, 10);
-    seconds = '' + (seconds % 60);
+    var minutes = parseInt(seconds / 60, 10);
+    var seconds = '' + (seconds % 60);
     if (seconds.length === 1) { 
       seconds = '0' + seconds; 
     }

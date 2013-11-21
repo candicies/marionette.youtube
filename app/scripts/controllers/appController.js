@@ -1,31 +1,16 @@
-define(
-  [
-    'marionette', 
-    'app',
-    'views/headerView'
-  ], function(
-    Marionette,
-    app,
-    HeaderView
-  ) {
+define(function (require) {
   'use strict';
+  var Marionette = require('marionette');
+  var app = require('app');
+  var AppLayoutView = require('views/app/layout');
 
   return Marionette.Controller.extend({
     initialize: function () {
-      app.headerRegion.show(new HeaderView());
+      app.layout = new AppLayoutView();
+      app.mainRegion.show(app.layout);
     },
 
     index: function () {
-      // var collection = new Backbone.Collection([
-      //   { id: 1 },
-      //   { id: 2 },
-      //   { id: 3 }
-      // ]);
-
-      // var layout = new LayoutView();
-
-      // app.mainRegion.show(layout);
-      // layout.searchBar.show(new SearchResultsView({ collection: collection }));
     }
   });
 });

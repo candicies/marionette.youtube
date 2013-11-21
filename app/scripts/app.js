@@ -4,7 +4,6 @@ define(['backbone', 'marionette'], function(Backbone, Marionette) {
 
   //configuration, setting up regions, etc
   app.addRegions({
-    headerRegion: '#header',
     mainRegion: '#main'
   });
 
