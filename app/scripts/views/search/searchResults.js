@@ -12,8 +12,8 @@ define(
 
     itemView: ItemView,
 
-    initialize: function () {
-      //this.listenTo(this.collection, 'sync', this.render);
+    onClose: function () {
+      this.collection.reset();
     }
 
   });

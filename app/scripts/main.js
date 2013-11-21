@@ -28,17 +28,25 @@ require.config({
 
 require(
   [
-  'app',
-  'routers/appRouter',
-  'routers/searchRouter',
-  'controllers/appController',
-  'controllers/searchController'
+	  'app',
+	  'routers/appRouter',
+	  'routers/searchRouter',
+	  'routers/nowPlayingRouter',
+    'routers/contactRouter',
+	  'controllers/appController',
+	  'controllers/searchController',
+	  'controllers/nowPlayingController',
+    'controllers/contactController'
   ], function (
     app,
     AppRouter,
     SearchRouter,
+    NowPlayingRouter,
+    ContactRouter,
     AppController,
-    SearchController
+    SearchController,
+    NowPlayingController,
+    ContactController
   ) {
 
     app.appRouter = new AppRouter({
@@ -47,7 +55,15 @@ require(
 
     app.searchRouter = new SearchRouter({
       controller: new SearchController()
-    })
+    });
+
+    app.nowPlayingRouter = new NowPlayingRouter({
+    	controller: new NowPlayingController()
+    });
+
+    app.contactRouter = new ContactRouter({
+      controller: new ContactController()
+    });
 
     app.start();
 });

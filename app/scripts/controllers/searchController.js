@@ -35,10 +35,12 @@ define(function (require) {
         this.layout.results.show(new SearchResultsView({ collection: this.collection }));
       }
 
-      this.collection.searchTerm = searchTerm;
-      this.collection.fetch({ dataType: 'jsonp' });
+      if (searchTerm) { 
+        this.collection.searchTerm = searchTerm;
+        this.collection.fetch({ dataType: 'jsonp' });
 
-      vent.trigger('search:searchTermChanged', searchTerm);
+        vent.trigger('search:searchTermChanged', searchTerm);
+      }
     }
   });
 });

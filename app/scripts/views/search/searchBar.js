@@ -5,6 +5,7 @@
  */
 define(function(require) {
    
+    var Backbone = require('backbone');
     var Marionette = require('marionette');
 
     var template = require('stache!templates/search/searchBar');
