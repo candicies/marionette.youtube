@@ -2886,8 +2886,18 @@ _.extend(Marionette.Module, {
 
 }));
 
-define('app',['backbone', 'marionette'], function(Backbone, Marionette) {
+/**
+ * create a Marionette application 
+ * @param  {Object} require
+ * @return {Object} Marionette application instance
+ */
+define('app',['require','backbone','marionette'],function (require) {
   
+  
+
+  var Backbone = require('backbone');
+  var Marionette = require('marionette');
+
 	var app = new Marionette.Application();
 
   //configuration, setting up regions, etc
@@ -2899,7 +2909,7 @@ define('app',['backbone', 'marionette'], function(Backbone, Marionette) {
     Backbone.history.start();
   });
 
-	return app; 
+	return app;
 
 });
 define('routers/appRouter',['marionette'], function(Marionette) {
@@ -3986,16 +3996,17 @@ define('stache',['text', 'mustache'], function (text, Mustache) {
 });
 define('stache!templates/app/layout', ['mustache'], function (Mustache) { return Mustache.compile('<div class="navbar navbar-inverse navbar-fixed-top">\n    <div class="navbar-inner">\n        <div class="container-fluid">\n            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">\n                <span class="icon-bar"></span>\n                <span class="icon-bar"></span>\n                <span class="icon-bar"></span>\n            </button>\n            <a class="brand" href="#">Marionette.youtube</a>\n\n            <div class="nav-collapse collapse">\n                <p class="navbar-text pull-right">\n                    Logged in as <a href="#" class="navbar-link">Username</a>\n                </p>\n                <ul class="nav">\n                    <li class="active"><a href="#">Home</a></li>\n                    <li><a href="#search">Search</a></li>\n                    <li><a href="#contact">Contact</a></li>\n                </ul>\n            </div>\n            <!--/.nav-collapse -->\n        </div>\n    </div>\n</div>\n\n<div class="container-fluid">\n    <div class="row-fluid">\n        <div class="span2">\n            <div class="well sidebar-nav">\n                <ul class="nav nav-list">\n                    <li class="nav-header">Sidebar</li>\n                    <li><a href="#">Home</a></li>\n                    <li><a href="#search">Search</a></li>\n                    <li><a href="#contact">Contact</a></li>\n                </ul>\n                <ul class="nav nav-list">\n                    <li class="nav-header">Recent Videos</li>\n                </ul>\n                <div >\n                    <ul class="nav nav-list unstyled" id="recentVideos"></ul>\n                </div>\n            </div>\n            <!--/.well -->\n        </div>\n        <!--/span-->\n        <div class="span10">\n            <div class="row-fluid">\n                <div class="span12">\n                    <h2>Marionette.youtube</h2>\n\n                    <div id="mainContent">\n                    </div>\n                </div>\n                <!--/span-->\n\n            </div>\n            <!--/row-->\n        </div>\n        <!--/span-->\n    </div>\n    <!--/row-->\n\n    <hr>\n\n    <footer>\n        <p>&copy; Company 2013</p>\n    </footer>\n\n</div>\n\n'); });
 
-define(
-  'views/app/layout',[
-    'marionette',
-    'stache!templates/app/layout'
-  ], function(
-    Marionette,
-    template
-  ) {
-   
+/**
+ * main app layout - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.Layout constructor
+ */
+define('views/app/layout',['require','marionette','stache!templates/app/layout'],function (require) { 
+
   
+
+  var Marionette = require('marionette');
+  var template = require('stache!templates/app/layout');
 
   return Marionette.Layout.extend({
     template: template,
@@ -4023,11 +4034,16 @@ define('views/recentVideos/item',['require','marionette','stache!templates/recen
   });
 
 });
-define('views/recentVideos/recentVideos',['require','marionette','views/recentVideos/item','eventAggregators/nowPlayingEventAggregator'],function (require) {
+/**
+ * related videos collection view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.CollectionView constuctor
+ */
+define('views/recentVideos/recentVideos',['require','marionette','./item','eventAggregators/nowPlayingEventAggregator'],function (require) {
   
 
   var Marionette = require('marionette');
-  var ItemView = require('views/recentVideos/item');
+  var ItemView = require('./item');
   var vent = require('eventAggregators/nowPlayingEventAggregator');
 
   var Model = Backbone.Model.extend({ idAttribute: 'source' });
@@ -4039,10 +4055,19 @@ define('views/recentVideos/recentVideos',['require','marionette','views/recentVi
 
     collection: new Backbone.Collection(),
 
+    /**
+     * called when new instance created, listen for current video loaded and 
+     * unshift the video object to the recent videos collection
+     * @return {none}
+     */
     initialize: function () {
       this.listenTo(vent, 'nowPlaying:sync', this.add);
     },
 
+    /**
+     * manage the recent videos collection at a specified max length
+     * @param {[type]} data
+     */
     add: function (data) {
       this.collection.unshift(new Model(data));
       if (this.collection.length > this.maxEntries) {
@@ -4053,6 +4078,11 @@ define('views/recentVideos/recentVideos',['require','marionette','views/recentVi
 });
 define('stache!templates/home/home', ['mustache'], function (Mustache) { return Mustache.compile('<h3>Marionette.js Youtube Demo</h3>\n<p>\n    This is a demo created with <a href="http://marionettejs.com/" target="_blank">Marionette.js</a>,\n    a "composite application library for Backbone.js that aims to simplify the construction of large scale JavaScript applications."\n\n</p>\n<p>The demo is a mimic of Youtube\'s search/now playing pages, start <a href="#/search">searching</a> and try it out.</p>'); });
 
+/**
+ * home view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.ItemView constructor
+ */
 define('views/home/home',['require','marionette','stache!templates/home/home'],function (require) {
 
   var Marionette = require('marionette');
@@ -4062,6 +4092,11 @@ define('views/home/home',['require','marionette','stache!templates/home/home'],f
     template: template
   });
 });
+/**
+ * app level controller, handles the main layout - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette Controller constructor
+ */
 define('controllers/appController',['require','marionette','app','views/app/layout','views/recentVideos/recentVideos','views/home/home'],function (require) {
   
   
@@ -4073,12 +4108,21 @@ define('controllers/appController',['require','marionette','app','views/app/layo
   var HomeView = require('views/home/home');
 
   return Marionette.Controller.extend({
+
+    /**
+     * called when an instance is created
+     * @return {none}
+     */
     initialize: function () {
-      app.layout = new AppLayoutView();
+      app.layout = new AppLayoutView(); //attach to app so we can reference in other controllers
       app.mainRegion.show(app.layout);
       app.layout.recentVideos.show(new RecentVideosView());
     },
 
+    /**
+     * route handler for associated router
+     * @return {none}
+     */
     index: function () {
       app.layout.mainContent.show(new HomeView());
     }
@@ -4086,20 +4130,25 @@ define('controllers/appController',['require','marionette','app','views/app/layo
 });
 define('stache!templates/search/layout', ['mustache'], function (Mustache) { return Mustache.compile('<section id="searchBar"></section>\n<section>\n  <div class="primary-col">\n    <ul class="unstyled" id="searchResults"></ul\n  </div>\n</section>'); });
 
-define(
-  'views/search/layout',[
-    'marionette',
-    'stache!templates/search/layout'
-  ], function(
-    Marionette,
-    template
-  ) {
+/**
+ * search layout view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.Layout constructor
+ */
+define('views/search/layout',['require','marionette','stache!templates/search/layout'],function (require) {
    
   
+
+  var Marionette = require('marionette');
+  var template = require('stache!templates/search/layout');
 
   return Marionette.Layout.extend({
     template: template,
 
+    /**
+     * define manageable regions in the layout
+     * @type {Object}
+     */
     regions: {
       searchBar: '#searchBar',
       results: '#searchResults'
@@ -4125,24 +4174,27 @@ define(
 
   }); 
 });
-define(
-  'views/search/searchResults',[
-    'marionette',
-    './item'
-  ], function(
-    Marionette,
-    ItemView
-  ) {
+/**
+ * search results collection view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.CollectionView constuctor
+ */
+define('views/search/searchResults',['require','marionette','./item'],function (require) {
   
      
-  return Marionette.CollectionView.extend({
+  var Marionette = require('marionette');
+  var ItemView = require('./item');
 
+  return Marionette.CollectionView.extend({
     itemView: ItemView,
 
+    /**
+    * Marionette event hook, called just before view is closed and removed
+    * @return {none}
+    */
     onClose: function () {
       this.collection.reset();
     }
-
   });
 });
 define('stache!templates/search/searchBar', ['mustache'], function (Mustache) { return Mustache.compile('<div class="control-group">\n    <div class="controls">\n        <div class="input-append">\n            <input id="searchTerm" type="text" name="searchTerm">\n            <span class="add-on btn" id="searchBtn"><i class="icon-search"></i></span>\n        </div>\n    </div>\n</div>'); });
@@ -4642,23 +4694,36 @@ define('views/search/searchBar',['require','backbone','marionette','stache!templ
         'click .icon-search': 'search'
       },
 
+      /**
+       * backbone.stickit declarative model bindings
+       * @type {Object}
+       */
       bindings: {
         '#searchTerm': 'searchTerm'
       },
 
+      /**
+       * called when new instance created
+       * @return {[type]}
+       */
       initialize: function () {
         this.model = new Model();
         this.listenTo(vent, 'search:searchTermChanged', this.onSearchTermChanged);
-        // this.listenTo(this.model, 'change', this.search);
       },
 
       /**
        * Marionette hook for post-render functionality
+       * @return {none}
        */
       onRender: function () {
         this.stickit();
       },
 
+      /**
+       * DOM event handler
+       * @param  {Object} e
+       * @return {none}
+       */
       onSearchKeyUp: function (e) {
         if (e.which === 13)  {
           // this.$(e.currentTarget).change();
@@ -4666,12 +4731,21 @@ define('views/search/searchBar',['require','backbone','marionette','stache!templ
         }
       },
 
+      /**
+       * event handler foor associated event aggregator
+       * @param  {string} searchTerm
+       * @return {none}
+       */
       onSearchTermChanged: function (searchTerm) {
         if (this.model.get('searchTerm') !== searchTerm) {
           this.model.set({searchTerm: searchTerm});
         }
       },
   
+      /**
+       * trigger an event through the aggregator with the current search term
+       * @return {none}
+       */
       search: function () {
         var searchTerm = this.model.get('searchTerm');
 
@@ -4684,92 +4758,55 @@ define('views/search/searchBar',['require','backbone','marionette','stache!templ
    
 });
 /**
- * RequireJS Module Definition - AMD 'sugar' syntax
+ * utilities modules - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object}
  */
-define('models/search/result',['require','backbone'],function (require) {
+define('common/utils',['require'],function (require) {
 
-  //module dependencies
-  var Backbone = require('backbone');
+  
 
-  return Backbone.Model.extend({
-    idAttribute: 'source',
+  return {
 
-    defaults: {
-      source: '',
-      media$group: {
-        media$thumbnail: [
-          { url: '' }
-        ],
-        media$description: {
-          $t: ''
-        }
-      },
-      title: {
-        $t: ''
-      },
-      author: [
-        { name: { $t: '' } }
-      ],
-      yt$statistics: {
-        viewCount: ''
-      }
+    /**
+     * Parse integer seconds to string time format - TODO: move to utilities module
+     * @param  {Number} seconds
+     * @return {String}
+     */
+    getDuration: function (seconds) {
+      var minutes;
+      var hours;
+
+      hours = parseInt(seconds / 3600);
+      seconds = seconds % 3600;
+      minutes = '' + parseInt(seconds / 60, 10);
+      seconds = '' + (seconds % 60);
+      seconds = Array(3 - seconds.length).join('0') + seconds;
+      minutes = Array(3 - minutes.length).join('0') + minutes;
+      return (hours ? hours + ':' : '') + minutes + ':' + seconds;
     }
-  });
+  };
 });
-
 /**
  * Search results collection
  * @param  {Object} require
  * @return {Object}
  */
-define('collections/search/collection',['require','backbone','models/search/result'],function (require) {
+define('collections/search/collection',['require','backbone','common/utils'],function (require) {
 
   
 
   //module dependencies
   var Backbone = require('backbone');
-  var Model = require('models/search/result');
-
-  /**
-   * Parse integer seconds to string time format - TODO: move to utilities module
-   * @param  {Number} seconds
-   * @return {String}
-   */
-  function getDuration(seconds) {
-    var minutes = parseInt(seconds / 60, 10);
-    var seconds = '' + (seconds % 60);
-    if (seconds.length === 1) { 
-      seconds = '0' + seconds; 
-    }
-    return minutes + ':' + seconds;
-  }
-
-  /**
-  * Massage the youtube API data for mustache.js rendering
-  * @param  {Array<Object>} entries
-  */
-  function processEntries(entries) {
-    var i = entries.length;
-    var entry;
-    var paths;
-
-    while (i--) {
-      entry = entries[i];
-      paths = entry.id.$t.split('/');
-      entry.source = paths[paths.length-1]; //generate a unique id
-      entry.duration = getDuration(entry.media$group.yt$duration.seconds);
-      entry.thumbnail = entry.media$group.media$thumbnail[0].url;
-      entry.authorName = entry.author[0].name.$t;
-      entry.description = entry.media$group.media$description.$t.substr(0, 50);
-    }
-  }
+  // var Model = require('models/search/result');
+  var utils = require('common/utils');
 
   /**
   * @exports collections/search/collection
   * @requires Backbone
   */
   return Backbone.Collection.extend({
-    model: Model,
+    // model: Model,
     searchTerm: '',
     startIndex: 1,
 
@@ -4788,7 +4825,20 @@ define('collections/search/collection',['require','backbone','models/search/resu
      */
     parse: function (response) {
       var entries = response.feed.entry;
-      processEntries(entries);
+      var i = entries.length;
+      var entry;
+      var paths;
+
+      while (i--) {
+        entry = entries[i];
+        paths = entry.id.$t.split('/');
+        entry.source = paths[paths.length-1]; //generate a unique id
+        entry.duration = utils.getDuration(entry.media$group.yt$duration.seconds);
+        entry.thumbnail = entry.media$group.media$thumbnail[0].url;
+        entry.authorName = entry.author[0].name.$t;
+        entry.description = entry.media$group.media$description.$t.substr(0, 50);
+      }
+      
       return entries;
     }
   });
@@ -4797,11 +4847,11 @@ define('collections/search/collection',['require','backbone','models/search/resu
 
 /**
  * search controller - AMD sugared syntax
- * 
- * @param  {[type]} require
- * @return {[type]}
+ * @param  {Object} require
+ * @return {Object} Marionette Controller constructor
  */
 define('controllers/searchController',['require','marionette','app','views/search/layout','views/search/searchResults','views/search/searchBar','collections/search/collection','eventAggregators/searchEventAggregator'],function (require) {
+  
   
 
   var Marionette = require('marionette'); 
@@ -4812,16 +4862,29 @@ define('controllers/searchController',['require','marionette','app','views/searc
   var SearchResultsCollection = require('collections/search/collection'); 
   var vent = require('eventAggregators/searchEventAggregator');
 
+  /**
+   * simple extension of Backbone.Collection to override 'id' attribute
+   * @type {Object}
+   */
+  SearchResultsCollection = SearchResultsCollection.extend({
+    model: Backbone.Model.extend({ idAttribute: 'source' })
+  });
+
   return Marionette.Controller.extend({
+
+    /**
+     * called when instance is created
+     * @return {none}
+     */
     initialize: function () {
       this.layout = new LayoutView();
       this.collection = new SearchResultsCollection();
     },
 
   /**
-   * [search description]
-   * @param  {[type]} id
-   * @return {[type]}
+   * route handler for associated router
+   * @param  {string} searchTerm - the user's current search term
+   * @return {none}
    */
     search: function (searchTerm) {
 
@@ -4843,6 +4906,11 @@ define('controllers/searchController',['require','marionette','app','views/searc
 });
 define('stache!templates/nowPlaying/layout', ['mustache'], function (Mustache) { return Mustache.compile('<div class="search" id="searchBar"></div>\n\n<div style="clear: both">\n    <div style="float:left;width:600px;">\n        <div class=\'nowPlaying\' id="nowPlaying" ></div>\n        <div class=\'comments\'>\n            <ul class="unstyled" id="comments"></ul>\n        </div>\n    </div>\n    <div style="float:left; margin-left:15px;width:300px;" class="related">\n        <ul class="unstyled" id="relatedVideos"></ul>\n    </div>\n</div>\n'); });
 
+/**
+ * now playing layout view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.Layout constructor
+ */
 define('views/nowPlaying/layout',['require','marionette','stache!templates/nowPlaying/layout'],function (require) {
 
   
@@ -4853,6 +4921,10 @@ define('views/nowPlaying/layout',['require','marionette','stache!templates/nowPl
   return Marionette.Layout.extend({
     template: template,
 
+    /**
+     * define manageable regions in the layout
+     * @type {Object}
+     */
     regions: {
         searchBar: '#searchBar',
         nowPlaying: '#nowPlaying',
@@ -4863,6 +4935,11 @@ define('views/nowPlaying/layout',['require','marionette','stache!templates/nowPl
 });
 define('stache!templates/nowPlaying/nowPlaying', ['mustache'], function (Mustache) { return Mustache.compile('<iframe width="560" height="386"\n        src="http://www.youtube.com/embed/{{source}}?html5=1&theme=dark&showinfo=0&modestbranding=1&controls=1&autoplay=0"\n        allowfullscreen style="border: 1px solid black;"></iframe>\n<h4>{{title.$t}}</h4>'); });
 
+/**
+ * current video, HTML5 youtube player container - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.ItemView constructor
+ */
 define('views/nowPlaying/nowPlaying',['require','marionette','stache!templates/nowPlaying/nowPlaying','eventAggregators/nowPlayingEventAggregator'],function (require) {
 
   var Marionette = require('marionette');
@@ -4872,11 +4949,20 @@ define('views/nowPlaying/nowPlaying',['require','marionette','stache!templates/n
   return Marionette.ItemView.extend({
     template: template,
 
+    /**
+     * called when new instance created
+     * @return {none}
+     */     
     initialize: function () {
       this.listenTo(this.model, 'sync', this.render);
       this.listenTo(this.model, 'sync', this.onSync);
     },
 
+    /**
+     * event handler for associated event aggregator,
+     * notify other entities that the current video has been loaded
+     * @return {none}
+     */
     onSync: function () {
       // vent.trigger('nowplaying.relatedcontent', this.model.toJSON());
       vent.trigger('nowPlaying:sync', this.model.toJSON());
@@ -4885,6 +4971,11 @@ define('views/nowPlaying/nowPlaying',['require','marionette','stache!templates/n
 });
 define('stache!templates/nowPlaying/comment', ['mustache'], function (Mustache) { return Mustache.compile('<span>\n<a class="yt-user-photo " href="/user/012013014">\n    <span class="video-thumb ux-thumb yt-thumb-square-48 ">\n        <span class="yt-thumb-clip">\n            <span class="yt-thumb-clip-inner">\n                <img width="48" src="http://lh3.googleusercontent.com/-I_-gAeddn8s/AAAAAAAAAAI/AAAAAAAAAAA/xM4yXc31Yds/s48-c-k/photo.jpg" alt="012013014" data-group-key="thumb-group-2">\n                <span class="vertical-align"></span>\n            </span>\n        </span>\n    </span>\n</a>\n<div class="content" style="margin-left:60px;">\n  <p class="metadata" style="margin: 0;">\n    <span class="author ">\n      <a dir="ltr" class="yt-uix-sessionlink yt-user-name " href="/user/012013014">{{authorName}}</a>\n    </span>\n      <span dir="ltr" class="time">\n        <a href="http://www.youtube.com/comment?lc=GNkUgBesuijmO2YuwmajMW8rHX89-lbqFZyJ4nPPmPs" dir="ltr">\n            {{published.$t}}\n        </a>\n      </span>\n  </p>\n\n\n  <div dir="ltr" class="comment-text">{{content.$t}}</div>\n</div>\n</span>\n\n'); });
 
+/**
+ * item view for comments collection view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.ItemView constructor
+ */
 define('views/nowPlaying/commentItem',['require','marionette','stache!templates/nowPlaying/comment'],function (require) {
 
   
@@ -4896,28 +4987,39 @@ define('views/nowPlaying/commentItem',['require','marionette','stache!templates/
     template: template,
     tagName: 'li',
     className: 'comment'
-
   });
-
 });
-define('views/nowPlaying/comments',['require','marionette','views/nowPlaying/commentItem'],function (require) {
+/**
+ * comments collection view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.CollectionView constuctor
+ */
+define('views/nowPlaying/comments',['require','marionette','./commentItem'],function (require) {
 
   
 
   var Marionette = require('marionette');
-  var ItemView = require('views/nowPlaying/commentItem');
+  var ItemView = require('./commentItem');
 
   return Marionette.CollectionView.extend({
     itemView: ItemView,
 
+    /**
+     * Marionette event hook, called just before view is closed and removed
+     * @return {none}
+     */
     onClose: function () {
       this.collection.reset();
     }
   });
-
 });
 define('stache!templates/nowPlaying/relatedVideo', ['mustache'], function (Mustache) { return Mustache.compile('<a href=\'#/nowplaying/{{source}}\'>\n    <span class="ux-thumb-wrap">\n        <span class="video-thumb ux-thumb yt-thumb-default-120 ">\n            <span class="yt-thumb-clip">\n                <span class="yt-thumb-clip-inner">\n                    <img width="120" alt="Thumbnail" src="{{thumbNailUrl}}" >\n                    <span class="vertical-align">\n                </span>\n                </span>\n            </span>\n        </span>\n        <span class="video-time">{{duration}}</span>\n    </span>\n    <span class="title" title="{{titleAbbr}}">{{titleAbbr}}</span>\n    <span class="stat">by {{authorName}}</span>\n    <span class="stat"> {{yt$statistics.viewCount}} views </span>\n</a>\n'); });
 
+/**
+ * item view for related videos collection view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.ItemView constructor
+ */
 define('views/nowPlaying/relatedVideo',['require','marionette','stache!templates/nowPlaying/relatedVideo'],function (require) {
 
   
@@ -4929,20 +5031,27 @@ define('views/nowPlaying/relatedVideo',['require','marionette','stache!templates
     template: template,
     tagName: 'li',
     className: 'video-list-item'
-
   });
-
 });
-define('views/nowPlaying/relatedVideos',['require','marionette','views/nowPlaying/relatedVideo'],function (require) {
+/**
+ * related videos collection view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.CollectionView constuctor
+ */
+define('views/nowPlaying/relatedVideos',['require','marionette','./relatedVideo'],function (require) {
 
   
 
   var Marionette = require('marionette');
-  var ItemView = require('views/nowPlaying/relatedVideo');
+  var ItemView = require('./relatedVideo');
 
   return Marionette.CollectionView.extend({
     itemView: ItemView,
 
+    /**
+     * Marionette event hook, called just before view is closed and removed
+     * @return {none}
+     */
     onClose: function () {
       this.collection.reset();
     }
@@ -4950,21 +5059,15 @@ define('views/nowPlaying/relatedVideos',['require','marionette','views/nowPlayin
   
 });
 /**
- * RequireJS Module Definition - AMD 'sugar' syntax
+ * model for current video
+ * @param  {Object} require
+ * @return {Object} Backbone.Model constructor
  */
-define('models/nowPlaying/model',['require','backbone'],function (require) {
+define('models/nowPlaying/nowPlaying',['require','backbone','common/utils'],function (require) {
 
   //module dependencies
   var Backbone = require('backbone');
-
-  function getDuration(seconds) {
-    var minutes = parseInt(seconds / 60, 10);
-    seconds = '' + (seconds % 60);
-    if (seconds.length === 1) {
-      seconds = '0' + seconds;
-    }
-    return minutes + ':' + seconds;
-  }
+  var utils = require('common/utils');
 
   return Backbone.Model.extend({
 
@@ -4983,105 +5086,117 @@ define('models/nowPlaying/model',['require','backbone'],function (require) {
       return 'http://gdata.youtube.com/feeds/videos/' + this.videoSource + '?format=5&alt=json-in-script';
     },
 
+    /**
+     * override fetch to always use jsonp
+     * @param  {Object} options
+     * @return {none}
+     */
     fetch: function (options) {
       var self = this,
         opts = _.extend({}, options || {});
 
       opts.dataType = 'jsonp';
-      Backbone.Model.prototype.fetch.call(this, opts)
+      Backbone.Model.prototype.fetch.call(this, opts);
     },
 
+    /**
+     * massaged inbound data
+     * @param  {Object} response - raw API data
+     * @return {Object}
+     */
     parse: function (response) {
-
       var data = response.entry;
       var paths = data.id.$t.split('/');
+
       data.source = paths[paths.length - 1];
-      data.duration = getDuration(data.media$group.yt$duration.seconds);
+      data.duration = utils.getDuration(data.media$group.yt$duration.seconds);
       data.authorName = data.author[0].name.$t;
       data.thumbNailUrl = data.media$group.media$thumbnail[1].url;
       data.titleAbbr = data.title.$t.substr(0, 20);
 
       return data;
     }
-
   });
-
 });
 
 /**
- * RequireJS Module Definition - AMD 'sugar' syntax
+ * comments collection - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Backbone Collection constructor
  */
 define('collections/nowPlaying/comments',['require','backbone'],function (require) {
 
   
   
-  //module dependencies
   var Backbone = require('backbone');
 
-  function processEntries(entries) {
-    var i = entries.length;
-    var entry;
-
-    while (i--) {
-      entry = entries[i];
-      entry.authorName = entry.author[0].name.$t;
-    }
-  }
-
   return Backbone.Collection.extend({
+
+    /**
+     * massage inbound data
+     * @param  {Object} response
+     * @return {Array<Object>}
+     */
     parse: function (response) {
       var entries = response.feed.entry;
-      processEntries(entries);
+      var i = entries.length;
+      var entry;
+
+      while (i--) {
+        entry = entries[i];
+        entry.authorName = entry.author[0].name.$t;
+      }
       return entries;
     }
   });
 });
 
 /**
- * RequireJS Module Definition - AMD 'sugar' syntax
+ * related videos collection - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Backbone Collection constructor
  */
-define('collections/nowPlaying/relatedVideos',['require','backbone'],function (require) {
+define('collections/nowPlaying/relatedVideos',['require','backbone','common/utils'],function (require) {
 
   //module dependencies
   var Backbone = require('backbone');
-
-  function getDuration(seconds) {
-    var minutes;
-
-    minutes = parseInt(seconds / 60, 10);
-    seconds = '' + (seconds % 60);
-    if (seconds.length === 1) { seconds = '0' + seconds; }
-    return minutes + ':' + seconds;
-  }
-
-  function processEntries(entries) {
-    var i = entries.length;
-    var entry;
-    var paths;
-
-    while (i--) {
-       entry = entries[i];
-       paths = entry.id.$t.split('/');
-       entry.source = paths[paths.length-1];
-       entry.duration = getDuration(entry.media$group.yt$duration.seconds);
-       entry.authorName = entry.author[0].name.$t;
-       entry.thumbNailUrl = entry.media$group.media$thumbnail[1].url;
-       entry.titleAbbr = entry.title.$t.substr(0, 20);
-    }
-  }
+  var utils = require('common/utils');
 
   return Backbone.Collection.extend({
 
+    /**
+     * massage inbound data
+     * @param  {Object} response
+     * @return {Array<Object>}
+     */
     parse: function (response) {
       var entries = response.feed.entry;
-      processEntries(entries);
+      var i = entries.length;
+      var entry;
+      var paths;
+
+      while (i--) {
+         entry = entries[i];
+         paths = entry.id.$t.split('/');
+         entry.source = paths[paths.length-1];
+         entry.duration = utils.getDuration(entry.media$group.yt$duration.seconds);
+         entry.authorName = entry.author[0].name.$t;
+         entry.thumbNailUrl = entry.media$group.media$thumbnail[1].url;
+         entry.titleAbbr = entry.title.$t.substr(0, 20);
+      }
+      
       return entries;
     }
   });
 
 });
 
-define('controllers/nowPlayingController',['require','marionette','app','views/search/searchBar','views/nowPlaying/layout','views/nowPlaying/nowPlaying','views/nowPlaying/comments','views/nowPlaying/relatedVideos','models/nowPlaying/model','collections/nowPlaying/comments','collections/nowPlaying/relatedVideos','eventAggregators/nowPlayingEventAggregator'],function (require) {
+/**
+ * now playing controller - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette Controller constructor
+ */
+define('controllers/nowPlayingController',['require','marionette','app','views/search/searchBar','views/nowPlaying/layout','views/nowPlaying/nowPlaying','views/nowPlaying/comments','views/nowPlaying/relatedVideos','models/nowPlaying/nowPlaying','collections/nowPlaying/comments','collections/nowPlaying/relatedVideos','eventAggregators/nowPlayingEventAggregator'],function (require) {
 
   
 
@@ -5092,20 +5207,33 @@ define('controllers/nowPlayingController',['require','marionette','app','views/s
   var NowPlayingView = require('views/nowPlaying/nowPlaying');
   var CommentsView = require('views/nowPlaying/comments');
   var RelatedVideosView = require('views/nowPlaying/relatedVideos');
-  var NowPlayingModel = require('models/nowPlaying/model');
+  var NowPlayingModel = require('models/nowPlaying/nowPlaying');
   var CommentsCollection = require('collections/nowPlaying/comments');
   var RelatedVideosCollection = require('collections/nowPlaying/relatedVideos');
   var vent = require('eventAggregators/nowPlayingEventAggregator');
 
+  /**
+   * simple extension of Backbone.Collection to override 'id' attribute
+   * @type {Object}
+   */
   CommentsCollection = CommentsCollection.extend({
     model: Backbone.Model.extend({ idAttribute: 'source' })
   });
   
+  /**
+   * simple extension of Backbone.Collection to override 'id' attribute
+   * @type {Object}
+   */
   RelatedVideosCollection = RelatedVideosCollection.extend({
     model: Backbone.Model.extend({ idAttribute: 'source' })
   });
 
   return Marionette.Controller.extend({
+
+    /**
+     * called when instance is created
+     * @return {none}
+     */
     initialize: function () {
       this.layout = new LayoutView();
       this.nowPlayingModel = new NowPlayingModel();
@@ -5115,6 +5243,11 @@ define('controllers/nowPlayingController',['require','marionette','app','views/s
       this.listenTo(vent, 'nowPlaying:sync', this.onSync);
     },
 
+    /**
+     * route handler for associated router
+     * @param  {string} id - source id for video
+     * @return {none}
+     */
     nowPlaying: function (id) {
       var mainContentRegion = app.layout.mainContent; 
       if (mainContentRegion.currentView != this.layout) {
@@ -5131,6 +5264,12 @@ define('controllers/nowPlayingController',['require','marionette','app','views/s
       }
     },
 
+    /**
+     * event handler for associated event aggregator, fetches comments and related videos when the current video
+     * has been loaded
+     * @param  {Object} data - the current video 
+     * @return {none}
+     */
     onSync: function (data) {
       this.commentsCollection.url = data.gd$comments.gd$feedLink.href + '?format=5&alt=json-in-script';
       this.commentsCollection.fetch({ dataType: 'jsonp' });
@@ -5142,6 +5281,11 @@ define('controllers/nowPlayingController',['require','marionette','app','views/s
 });
 define('stache!templates/contact/contact', ['mustache'], function (Mustache) { return Mustache.compile('<img src="{{avatar}}" class="img-polaroid" style="float: left; margin-right:15px;">\n<div style="float:left; width: 800px;">\n    <h3>Tim Doherty</h3>\n\n    <p>I\'m a software engineer, avid SCUBA diver, amateur underwater photographer, and occasional musician living in\n        southern California. My passion is solving problems and building things with technology.</p>\n\n    <ul class="unstyled">\n      {{#links}}\n        <li class="contactLink">\n          <a class="btn btn-small" href="{{url}}" target="{{target}}">{{text}}</a>\n        </li>\n      {{/links}}\n    </ul>\n</div>'); });
 
+/**
+ * contact view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.ItemView constructor
+ */
 define('views/contact/contact',['require','backbone','marionette','stache!templates/contact/contact'],function (require) {
 
   
@@ -5153,6 +5297,10 @@ define('views/contact/contact',['require','backbone','marionette','stache!templa
   return Marionette.ItemView.extend({
     template: template,
     
+    /**
+     * call when instance created
+     * @return {none}
+     */
     initialize: function () {
       this.model = new Backbone.Model({
         avatar: 'https://fbexternal-a.akamaihd.net/safe_image.php?d=AQDAacwkOhqzeWDH&w=155&h=114&url=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F481d556f479c71e5cc06f1493d4f6613%3Fs%3D420%26d%3Dhttps%253A%252F%252Fa248.e.akamai.net%252Fassets.github.com%252Fimages%252Fgravatars%252Fgravatar-user-420.png',
@@ -5166,13 +5314,11 @@ define('views/contact/contact',['require','backbone','marionette','stache!templa
       });
     }
   });
-
 });
 /**
  * search controller - AMD sugared syntax
- * 
- * @param  {[type]} require
- * @return {[type]}
+ * @param  {Object} require
+ * @return {Object} Marionette Controller constructor
  */
 define('controllers/contactController',['require','marionette','app','views/contact/contact'],function (require) {
   
@@ -5182,19 +5328,69 @@ define('controllers/contactController',['require','marionette','app','views/cont
   var ContactView = require('views/contact/contact');
 
   return Marionette.Controller.extend({
+
+    /**
+     * called when instance is created
+     * @return {none}
+     */
     initialize: function () {
       this.contactView = new ContactView();
     },
 
-  /**
-   * [search description]
-   * @param  {[type]} id
-   * @return {[type]}
-   */
+    /**
+     * route handler for associated router
+     * @return {none}
+     */
     contact: function () {
       app.layout.mainContent.show(this.contactView);
     }
   });
+});
+/**
+ * configure the Marionette application routers/controllers
+ * @param  {Object} require
+ * @return {Object} bootstrap object
+ */
+define('bootstrap',['require','app','routers/appRouter','routers/searchRouter','routers/nowPlayingRouter','routers/contactRouter','controllers/appController','controllers/searchController','controllers/nowPlayingController','controllers/contactController'],function (require) {
+
+  
+
+  var app = require('app');
+  var AppRouter = require('routers/appRouter');
+  var SearchRouter = require('routers/searchRouter');
+  var NowPlayingRouter = require('routers/nowPlayingRouter');
+  var ContactRouter = require('routers/contactRouter');
+  var AppController = require('controllers/appController');
+  var SearchController = require('controllers/searchController');
+  var NowPlayingController = require('controllers/nowPlayingController');
+  var ContactController = require('controllers/contactController');
+
+  return {
+
+    /**
+     * attach routers and associated controllers to the Marionette application, and start the app
+     * @return {none}
+     */
+    init: function () {
+      app.appRouter = new AppRouter({
+        controller: new AppController()
+      });
+
+      app.searchRouter = new SearchRouter({
+        controller: new SearchController()
+      });
+
+      app.nowPlayingRouter = new NowPlayingRouter({
+        controller: new NowPlayingController()
+      });
+
+      app.contactRouter = new ContactRouter({
+        controller: new ContactController()
+      });
+
+      app.start();
+    }
+  };
 });
 require.config({
 	paths: {
@@ -5224,45 +5420,8 @@ require.config({
 	}
 });
 
-require(
-  [
-	  'app',
-	  'routers/appRouter',
-	  'routers/searchRouter',
-	  'routers/nowPlayingRouter',
-    'routers/contactRouter',
-	  'controllers/appController',
-	  'controllers/searchController',
-	  'controllers/nowPlayingController',
-    'controllers/contactController'
-  ], function (
-    app,
-    AppRouter,
-    SearchRouter,
-    NowPlayingRouter,
-    ContactRouter,
-    AppController,
-    SearchController,
-    NowPlayingController,
-    ContactController
-  ) {
-
-    app.appRouter = new AppRouter({
-      controller: new AppController()
-    });
-
-    app.searchRouter = new SearchRouter({
-      controller: new SearchController()
-    });
-
-    app.nowPlayingRouter = new NowPlayingRouter({
-    	controller: new NowPlayingController()
-    });
-
-    app.contactRouter = new ContactRouter({
-      controller: new ContactController()
-    });
-
-    app.start();
+require(['bootstrap'], function (bootstrap) {
+  bootstrap.init();
 });
+
 define("main", function(){});
