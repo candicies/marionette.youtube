@@ -9,23 +9,22 @@ A youtube emulator demo built with Backbone.Marionette and RequireJS
 
 Dev environment requires node >=0.8.0
 
+* Clone this repository
 ```shell
 git clone git@github.com:tdoherty/marionette.youtube.git
 ```
 
-Install node dependencies
-
+* Install node dependencies
 ```shell
 npm install
 ```
 
-Install bower dependencies
-
+* Install bower dependencies
 ```shell
 bower install
 ```
 
-Run the grunt 'serve' task
+* Run the grunt 'serve' task
 
 
 
