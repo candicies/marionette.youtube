@@ -3,7 +3,7 @@ marionette.youtube
 
 A youtube emulator demo built with Backbone.Marionette and RequireJS
 
-# See it in action [here](http://tdoherty.github.io/marionette.youtube)
+### See it in action [here](http://tdoherty.github.io/marionette.youtube)
 
 ## To run the demo:
 
