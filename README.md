@@ -25,6 +25,8 @@ bower install
 ```
 
 * Run the grunt 'serve' task
-
+```shell
+grunt serve
+```
 
 
