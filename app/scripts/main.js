@@ -26,44 +26,6 @@ require.config({
 	}
 });
 
-require(
-  [
-	  'app',
-	  'routers/appRouter',
-	  'routers/searchRouter',
-	  'routers/nowPlayingRouter',
-    'routers/contactRouter',
-	  'controllers/appController',
-	  'controllers/searchController',
-	  'controllers/nowPlayingController',
-    'controllers/contactController'
-  ], function (
-    app,
-    AppRouter,
-    SearchRouter,
-    NowPlayingRouter,
-    ContactRouter,
-    AppController,
-    SearchController,
-    NowPlayingController,
-    ContactController
-  ) {
-
-    app.appRouter = new AppRouter({
-      controller: new AppController()
-    });
-
-    app.searchRouter = new SearchRouter({
-      controller: new SearchController()
-    });
-
-    app.nowPlayingRouter = new NowPlayingRouter({
-    	controller: new NowPlayingController()
-    });
-
-    app.contactRouter = new ContactRouter({
-      controller: new ContactController()
-    });
-
-    app.start();
+require(['bootstrap'], function (bootstrap) {
+  bootstrap.init();
 });

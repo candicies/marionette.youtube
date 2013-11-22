@@ -1,8 +1,7 @@
 /**
  * search controller - AMD sugared syntax
- * 
- * @param  {[type]} require
- * @return {[type]}
+ * @param  {Object} require
+ * @return {Object} Marionette Controller constructor
  */
 define(function (require) {
   'use strict';
@@ -12,15 +11,19 @@ define(function (require) {
   var ContactView = require('views/contact/contact');
 
   return Marionette.Controller.extend({
+
+    /**
+     * called when instance is created
+     * @return {none}
+     */
     initialize: function () {
       this.contactView = new ContactView();
     },
 
-  /**
-   * [search description]
-   * @param  {[type]} id
-   * @return {[type]}
-   */
+    /**
+     * route handler for associated router
+     * @return {none}
+     */
     contact: function () {
       app.layout.mainContent.show(this.contactView);
     }

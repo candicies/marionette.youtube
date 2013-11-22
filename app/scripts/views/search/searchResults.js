@@ -1,20 +1,23 @@
-define(
-  [
-    'marionette',
-    './item'
-  ], function(
-    Marionette,
-    ItemView
-  ) {
+/**
+ * search results collection view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.CollectionView constuctor
+ */
+define(function (require) {
   'use strict';
      
-  return Marionette.CollectionView.extend({
+  var Marionette = require('marionette');
+  var ItemView = require('./item');
 
+  return Marionette.CollectionView.extend({
     itemView: ItemView,
 
+    /**
+    * Marionette event hook, called just before view is closed and removed
+    * @return {none}
+    */
     onClose: function () {
       this.collection.reset();
     }
-
   });
 });

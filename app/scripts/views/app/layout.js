@@ -1,13 +1,14 @@
-define(
-  [
-    'marionette',
-    'stache!templates/app/layout'
-  ], function(
-    Marionette,
-    template
-  ) {
-   
+/**
+ * main app layout - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.Layout constructor
+ */
+define(function (require) { 
+
   'use strict';
+
+  var Marionette = require('marionette');
+  var template = require('stache!templates/app/layout');
 
   return Marionette.Layout.extend({
     template: template,

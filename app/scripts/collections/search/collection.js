@@ -9,48 +9,15 @@ define(function (require) {
 
   //module dependencies
   var Backbone = require('backbone');
-  var Model = require('models/search/result');
-
-  /**
-   * Parse integer seconds to string time format - TODO: move to utilities module
-   * @param  {Number} seconds
-   * @return {String}
-   */
-  function getDuration(seconds) {
-    var minutes = parseInt(seconds / 60, 10);
-    var seconds = '' + (seconds % 60);
-    if (seconds.length === 1) { 
-      seconds = '0' + seconds; 
-    }
-    return minutes + ':' + seconds;
-  }
-
-  /**
-  * Massage the youtube API data for mustache.js rendering
-  * @param  {Array<Object>} entries
-  */
-  function processEntries(entries) {
-    var i = entries.length;
-    var entry;
-    var paths;
-
-    while (i--) {
-      entry = entries[i];
-      paths = entry.id.$t.split('/');
-      entry.source = paths[paths.length-1]; //generate a unique id
-      entry.duration = getDuration(entry.media$group.yt$duration.seconds);
-      entry.thumbnail = entry.media$group.media$thumbnail[0].url;
-      entry.authorName = entry.author[0].name.$t;
-      entry.description = entry.media$group.media$description.$t.substr(0, 50);
-    }
-  }
+  // var Model = require('models/search/result');
+  var utils = require('common/utils');
 
   /**
   * @exports collections/search/collection
   * @requires Backbone
   */
   return Backbone.Collection.extend({
-    model: Model,
+    // model: Model,
     searchTerm: '',
     startIndex: 1,
 
@@ -69,7 +36,20 @@ define(function (require) {
      */
     parse: function (response) {
       var entries = response.feed.entry;
-      processEntries(entries);
+      var i = entries.length;
+      var entry;
+      var paths;
+
+      while (i--) {
+        entry = entries[i];
+        paths = entry.id.$t.split('/');
+        entry.source = paths[paths.length-1]; //generate a unique id
+        entry.duration = utils.getDuration(entry.media$group.yt$duration.seconds);
+        entry.thumbnail = entry.media$group.media$thumbnail[0].url;
+        entry.authorName = entry.author[0].name.$t;
+        entry.description = entry.media$group.media$description.$t.substr(0, 50);
+      }
+      
       return entries;
     }
   });

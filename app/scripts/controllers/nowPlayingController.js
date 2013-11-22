@@ -1,3 +1,8 @@
+/**
+ * now playing controller - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette Controller constructor
+ */
 define(function (require) {
 
   'use strict';
@@ -9,20 +14,33 @@ define(function (require) {
   var NowPlayingView = require('views/nowPlaying/nowPlaying');
   var CommentsView = require('views/nowPlaying/comments');
   var RelatedVideosView = require('views/nowPlaying/relatedVideos');
-  var NowPlayingModel = require('models/nowPlaying/model');
+  var NowPlayingModel = require('models/nowPlaying/nowPlaying');
   var CommentsCollection = require('collections/nowPlaying/comments');
   var RelatedVideosCollection = require('collections/nowPlaying/relatedVideos');
   var vent = require('eventAggregators/nowPlayingEventAggregator');
 
+  /**
+   * simple extension of Backbone.Collection to override 'id' attribute
+   * @type {Object}
+   */
   CommentsCollection = CommentsCollection.extend({
     model: Backbone.Model.extend({ idAttribute: 'source' })
   });
   
+  /**
+   * simple extension of Backbone.Collection to override 'id' attribute
+   * @type {Object}
+   */
   RelatedVideosCollection = RelatedVideosCollection.extend({
     model: Backbone.Model.extend({ idAttribute: 'source' })
   });
 
   return Marionette.Controller.extend({
+
+    /**
+     * called when instance is created
+     * @return {none}
+     */
     initialize: function () {
       this.layout = new LayoutView();
       this.nowPlayingModel = new NowPlayingModel();
@@ -32,6 +50,11 @@ define(function (require) {
       this.listenTo(vent, 'nowPlaying:sync', this.onSync);
     },
 
+    /**
+     * route handler for associated router
+     * @param  {string} id - source id for video
+     * @return {none}
+     */
     nowPlaying: function (id) {
       var mainContentRegion = app.layout.mainContent; 
       if (mainContentRegion.currentView != this.layout) {
@@ -48,6 +71,12 @@ define(function (require) {
       }
     },
 
+    /**
+     * event handler for associated event aggregator, fetches comments and related videos when the current video
+     * has been loaded
+     * @param  {Object} data - the current video 
+     * @return {none}
+     */
     onSync: function (data) {
       this.commentsCollection.url = data.gd$comments.gd$feedLink.href + '?format=5&alt=json-in-script';
       this.commentsCollection.fetch({ dataType: 'jsonp' });

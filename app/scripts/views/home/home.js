@@ -1,3 +1,8 @@
+/**
+ * home view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.ItemView constructor
+ */
 define(function (require) {
 
   var Marionette = require('marionette');

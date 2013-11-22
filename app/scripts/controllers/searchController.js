@@ -1,10 +1,10 @@
 /**
  * search controller - AMD sugared syntax
- * 
- * @param  {[type]} require
- * @return {[type]}
+ * @param  {Object} require
+ * @return {Object} Marionette Controller constructor
  */
 define(function (require) {
+  
   'use strict';
 
   var Marionette = require('marionette'); 
@@ -15,16 +15,29 @@ define(function (require) {
   var SearchResultsCollection = require('collections/search/collection'); 
   var vent = require('eventAggregators/searchEventAggregator');
 
+  /**
+   * simple extension of Backbone.Collection to override 'id' attribute
+   * @type {Object}
+   */
+  SearchResultsCollection = SearchResultsCollection.extend({
+    model: Backbone.Model.extend({ idAttribute: 'source' })
+  });
+
   return Marionette.Controller.extend({
+
+    /**
+     * called when instance is created
+     * @return {none}
+     */
     initialize: function () {
       this.layout = new LayoutView();
       this.collection = new SearchResultsCollection();
     },
 
   /**
-   * [search description]
-   * @param  {[type]} id
-   * @return {[type]}
+   * route handler for associated router
+   * @param  {string} searchTerm - the user's current search term
+   * @return {none}
    */
     search: function (searchTerm) {
 

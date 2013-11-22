@@ -1,5 +1,15 @@
-define(['backbone', 'marionette'], function(Backbone, Marionette) {
+/**
+ * create a Marionette application 
+ * @param  {Object} require
+ * @return {Object} Marionette application instance
+ */
+define(function (require) {
+  
   'use strict';
+
+  var Backbone = require('backbone');
+  var Marionette = require('marionette');
+
 	var app = new Marionette.Application();
 
   //configuration, setting up regions, etc
@@ -11,6 +21,6 @@ define(['backbone', 'marionette'], function(Backbone, Marionette) {
     Backbone.history.start();
   });
 
-	return app; 
+	return app;
 
 });
