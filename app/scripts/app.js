@@ -10,7 +10,7 @@ define(function (require) {
   var Backbone = require('backbone');
   var Marionette = require('marionette');
 
-	var app = new Marionette.Application();
+  var app = new Marionette.Application();
 
   //configuration, setting up regions, etc
   app.addRegions({
@@ -21,6 +21,6 @@ define(function (require) {
     Backbone.history.start();
   });
 
-	return app;
+  return app;
 
 });

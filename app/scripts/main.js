@@ -10,7 +10,7 @@ require.config({
 		text: '../bower_components/requirejs-text/text',
 		stache: '../bower_components/requirejs-mustache/stache',
 		stickit: '../bower_components/backbone.stickit/backbone.stickit',
-    templates: '../templates'
+		templates: '../templates'
 	},
 	shim: {
 		backbone: {
