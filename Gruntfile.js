@@ -17,7 +17,23 @@ module.exports = function (grunt) {
         // configurable paths
         yeoman: {
             app: 'app',
-            dist: 'dist'
+            dist: 'dist',
+        },
+        requirejs: {
+            compile: {
+                options: {
+                  baseUrl: '<%= yeoman.app %>/scripts',
+                  name: '../bower_components/almond/almond',
+                  include: ['main'],
+                  includeRequire: ['main'],      
+                  mainConfigFile: '<%= yeoman.app %>/scripts/main.js',
+                  out: '<%= yeoman.dist %>/main.js',
+                  optimize: 'none'                
+                },
+                debug: {
+                    optimize: 'none'
+                }
+            }
         },
         watch: {
             compass: {
@@ -256,6 +272,7 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'images/{,*/}*.{webp,gif}',
+                        'img/{,*/}*.{webp,gif,png,jpg}',
                         'styles/fonts/{,*/}*.*'
                     ]
                 }]
@@ -325,6 +342,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
+        'requirejs',
         'useminPrepare',
         'concurrent:dist',
         'autoprefixer',

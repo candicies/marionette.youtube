@@ -1,18 +1,16 @@
-@import "normalize.css";
-@import "bootstrap.css";
-/*@import "http://s.ytimg.com/yts/cssbin/www-core-vfl9avuXx.css";*/
-@import "youtube.css";
+
 
 body {
-    padding-top: 60px;
-    padding-bottom: 40px;
+    padding-top: 60px !important;
+    padding-bottom: 40px !important;
 }
 
 .contactLink {
-    margin-bottom:10px;
+    margin-bottom:10px !important;
 }
 
 .contactLink a {
-    width: 110px;
-    text-align: left;
+    width: 110px !important;
+    text-align: left !important;
 }
+
