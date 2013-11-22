@@ -27,8 +27,7 @@ module.exports = function (grunt) {
                   include: ['main'],
                   includeRequire: ['main'],      
                   mainConfigFile: '<%= yeoman.app %>/scripts/main.js',
-                  out: '<%= yeoman.dist %>/main.js',
-                  optimize: 'none'                
+                  out: '<%= yeoman.dist %>/main.js'
                 },
                 debug: {
                     optimize: 'none'
