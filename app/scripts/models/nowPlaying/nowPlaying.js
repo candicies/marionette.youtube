@@ -5,6 +5,8 @@
  */
 define(function (require) {
 
+  'use strict';
+  
   //module dependencies
   var Backbone = require('backbone');
   var utils = require('common/utils');

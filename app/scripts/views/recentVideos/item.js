@@ -1,3 +1,8 @@
+/**
+ * item view for recent videos collection view - AMD sugared syntax
+ * @param  {Object} require
+ * @return {Object} Marionette.ItemView constructor
+ */
 define(function (require) {
 
   'use strict';
@@ -9,7 +14,5 @@ define(function (require) {
     template: template,
     tagName: 'li',
     className: 'video-list-item'
-
   });
-
 });

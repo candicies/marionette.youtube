@@ -5,6 +5,8 @@
  */
 define(function (require) {
 
+  'use strict';
+  
   var Marionette = require('marionette');
   var template = require('stache!templates/nowPlaying/nowPlaying');
   var vent = require('eventAggregators/nowPlayingEventAggregator');

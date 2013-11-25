@@ -4,6 +4,7 @@
  * @return {Object} Marionette.CollectionView constuctor
  */
 define(function (require) {
+  
   'use strict';
 
   var Marionette = require('marionette');

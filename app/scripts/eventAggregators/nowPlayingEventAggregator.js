@@ -1,6 +1,7 @@
 define(function(require) {
-   
-    var wreqr = require('backbone.wreqr');
-   
-    return new wreqr.EventAggregator();
+  'use strict';
+  
+  var wreqr = require('backbone.wreqr');
+
+  return new wreqr.EventAggregator();
 });
